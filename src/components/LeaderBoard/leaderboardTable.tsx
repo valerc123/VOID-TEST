@@ -2,24 +2,20 @@ import { Button, Group, Text } from '@mantine/core';
 import { DataTable } from 'mantine-datatable';
 import { useEffect, useRef, useState } from 'react';
 import data from './resLeaderboard.json';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 export default function LeaderboardTable() {
   let players = data.players;
-  const batchSize = 100;
+  const router = useRouter();
+  const batchSize = 1000;
   const [loading, setLoading] = useState(false);
   const [records, setRecords] = useState(players.slice(0, batchSize));
   const scrollViewportRef = useRef<HTMLDivElement>(null);
 
   let timeout: ReturnType<typeof setTimeout> | undefined;
-  for (let i = 0; i < records.length; i++) {
-    console.log(records[i]);
-  }
 
   const loadMoreRecords = () => {
-    // iterate through the records and print each one
-     
-
-
     if (records.length < players.length) {
       setLoading(true);
       timeout = setTimeout(() => {
@@ -46,14 +42,28 @@ export default function LeaderboardTable() {
     <>
       <DataTable
         withBorder
+        withColumnBorders
         borderRadius="sm"
-        height={800}
-        columns={[{ accessor: 'leaderboardRank' }, { accessor: 'gameName' }, {accessor: 'tagLine'}, { accessor: 'rankedRating' } , {accessor: 'numberOfWins'}, {accessor: 'competitiveTier'}]}
+        fontSize="md"
+        height={900}
+        columns={[
+          {accessor: 'PlayerCardID', hidden: true },
+          {accessor: 'leaderboardRank', title: 'Rank' },
+          {accessor: 'gameName', title: 'Name'},
+          {accessor: 'tagLine', title: 'Tag' },
+          {accessor: 'rankedRating' },
+          {accessor: 'numberOfWins', title: 'Wins'},
+          {accessor: 'competitiveTier', title: 'Tier'}]
+        }
         records={records}
         fetching={loading}
         onScrollToBottom={loadMoreRecords}
         scrollViewportRef={scrollViewportRef}
-      />
+        onRowClick={(player, rowIndex, event) => {
+          router.push(`player/${player.gameName}/${player.tagLine}`);
+        }}
+        />
+
       <Group mt="sm" mx="xs" position="apart">
         <Text size="sm">
           Showing {records.length} records of {players.length}
