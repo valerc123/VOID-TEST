@@ -3,7 +3,6 @@ import { DataTable } from 'mantine-datatable';
 import { useEffect, useRef, useState } from 'react';
 import data from './resLeaderboard.json';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 
 export default function LeaderboardTable() {
   let players = data.players;
@@ -12,12 +11,12 @@ export default function LeaderboardTable() {
   const [loading, setLoading] = useState(false);
   const [records, setRecords] = useState(players.slice(0, batchSize));
   const scrollViewportRef = useRef<HTMLDivElement>(null);
-
+  let key = '';
   let timeout: ReturnType<typeof setTimeout> | undefined;
 
   const loadMoreRecords = () => {
     if (records.length < players.length) {
-      setLoading(true);
+      setLoading(true); 
       timeout = setTimeout(() => {
         setRecords(players.slice(0, records.length + batchSize));
         setLoading(false);
@@ -47,7 +46,7 @@ export default function LeaderboardTable() {
         fontSize="md"
         height={900}
         columns={[
-          {accessor: 'PlayerCardID', hidden: true },
+          {accessor: 'PlayerCardID', hidden: true},
           {accessor: 'leaderboardRank', title: 'Rank' },
           {accessor: 'gameName', title: 'Name'},
           {accessor: 'tagLine', title: 'Tag' },
@@ -62,7 +61,7 @@ export default function LeaderboardTable() {
         onRowClick={(player, rowIndex, event) => {
           router.push(`player/${player.gameName}/${player.tagLine}`);
         }}
-        />
+      />
 
       <Group mt="sm" mx="xs" position="apart">
         <Text size="sm">
