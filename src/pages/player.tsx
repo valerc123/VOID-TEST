@@ -20,13 +20,13 @@ function PlayerTable() {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   }
 
-  /*  if (isLoading) {
+   if (isLoading) {
      return <p className='m-4 p-4'>Loading data...</p>;
    }
  
    if (error) {
      return <p className='m-4 p-4'>{error}</p>;
-   } */
+   }
 
   function Mapplayed(map: string, players: any) {
     let player = players.find((player: any) => (player.name == name))
@@ -87,9 +87,7 @@ function PlayerTable() {
         </Table>
       </div>)
     }
-
   </>);
 }
-
 
 export default PlayerTable;
