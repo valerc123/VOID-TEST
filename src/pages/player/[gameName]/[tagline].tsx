@@ -58,6 +58,13 @@ function PlayerTable() {
        return cell.players.all_players.find((player: any) => (player.name == name))
   })
   } */
+  function Mapplayed (map: string, players: any) {
+    let player = players.find((player: any) => (player.name == name))
+    return <div> 
+        <h4 className='font-bold'>{map}</h4>
+        <Image src={player.assets.card.large} alt="card" width={80} height={80} />
+      </div>
+  }
 
   function TeamPlayersWin (teams: any, players: any) {
     let player = players.find((player: any) => (player.name == name))
@@ -77,17 +84,10 @@ function PlayerTable() {
   function AgentPlayer (players: any) {
     let player = players.find((player: any) => (player.name == name))
 
-    return <Image src={player.assets.agent.small} width={80} height={80} />
+    return <Image src={player.assets.agent.small} alt="agent" width={80} height={80} />
   }
 
-  function Mapplayed (map: string, players: any) {
-    let player = players.find((player: any) => (player.name == name))
-    
-    return <div> 
-        <h4 className='font-bold'>{map}</h4>
-        <Image src={player.assets.card.large} width={80} height={80} />
-      </div>
-  }
+  
         
   const rows = data.data && data.data.map((cell) => (
     <tr key={cell.metadata.matchid}>
