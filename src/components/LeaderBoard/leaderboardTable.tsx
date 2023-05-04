@@ -1,17 +1,18 @@
 import { Button, Group, Text } from '@mantine/core';
 import { DataTable } from 'mantine-datatable';
 import { useEffect, useRef, useState } from 'react';
-import data from './resLeaderboard.json';
 import { useRouter } from 'next/router';
+import { useGetLeaderBoardQuery } from '../../redux/api';
 
 export default function LeaderboardTable() {
-  let players = data.players;
+  const { data, isLoading, error } = useGetLeaderBoardQuery("eu")
+  const [players, setPlayers] = useState([]);
+
   const router = useRouter();
   const batchSize = 1000;
   const [loading, setLoading] = useState(false);
-  const [records, setRecords] = useState(players.slice(0, batchSize));
+  const [records, setRecords] = useState([]);
   const scrollViewportRef = useRef<HTMLDivElement>(null);
-  let key = '';
   let timeout: ReturnType<typeof setTimeout> | undefined;
 
   const loadMoreRecords = () => {
@@ -22,7 +23,7 @@ export default function LeaderboardTable() {
         setLoading(false);
       }, 1000);
     }
-  };
+  }; 
 
   const reset = () => {
     setRecords(players.slice(0, batchSize));
@@ -30,14 +31,23 @@ export default function LeaderboardTable() {
     scrollViewportRef.current?.scrollTo(0, 0);
   };
 
-  // Clear timeout on unmount
+  useEffect(() => {
+   if (isLoading === false){
+     setPlayers(data.players)
+     setRecords(data.players.slice(0, batchSize));
+   }
+  }, [data]);
+
   useEffect(() => {
     return () => {
+      // Clear timeout on unmount
       if (timeout) clearTimeout(timeout);
     };
-  }, [timeout]);
+  }, [timeout]); 
 
   return (
+    <>
+    {isLoading ? <p className='m-4 p-4'>Loading data...</p> : (
     <>
       <DataTable
         withBorder
@@ -59,7 +69,7 @@ export default function LeaderboardTable() {
         onScrollToBottom={loadMoreRecords}
         scrollViewportRef={scrollViewportRef}
         onRowClick={(player, rowIndex, event) => {
-          router.push(`player/${player.gameName}/${player.tagLine}`);
+          router.push(`player?gameName=${player.gameName}&tag=${player.tagLine}`);
         }}
       />
 
@@ -72,6 +82,8 @@ export default function LeaderboardTable() {
           Reset records
         </Button>
       </Group>
+      </>)
+      }
     </>
   );
 }
