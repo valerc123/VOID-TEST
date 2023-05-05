@@ -1,11 +1,9 @@
 import { Box, Button, Group, Text, TextInput} from '@mantine/core';
-/* import { useDebouncedValue } from '@mantine/hooks'; */
 import { IconSearch } from '@tabler/icons-react';
 import { DataTable } from 'mantine-datatable';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useGetPostsQuery } from '../redux/posts/api';
-//import  data from "../components/posts.json"
 import { useDebouncedValue } from '@mantine/hooks'
 
 
