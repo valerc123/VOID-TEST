@@ -1,25 +1,25 @@
-import { Box, Button, Group, Text, TextInput } from '@mantine/core';
+import { Box, Button, Group, Text, TextInput} from '@mantine/core';
 /* import { useDebouncedValue } from '@mantine/hooks'; */
 import { IconSearch } from '@tabler/icons-react';
 import { DataTable } from 'mantine-datatable';
 import { useEffect, useRef, useState } from 'react';
 import { useRouter } from 'next/router';
-//import { useGetPostsIdQuery } from '../redux/posts/api';
-import  data from "../components/posts.json"
+import { useGetPostsQuery } from '../redux/posts/api';
+//import  data from "../components/posts.json"
 import { useDebouncedValue } from '@mantine/hooks'
 
-const initialRecords = data.slice(0, 10);
 
 export default function Posts() {
-   //const { data, isLoading} = useGetPostsIdQuery("1")
+   const { data, isLoading} = useGetPostsQuery(undefined, {})
+
   const [posts, setPosts] = useState([]);
   const router = useRouter();
   const batchSize = 10;
   const [loading, setLoading] = useState(false);
-  const [records, setRecords] = useState(initialRecords);
+  const [records, setRecords] = useState([]);
 
   const [query, setQuery] = useState('');
- // const [debouncedQuery] = useDebouncedValue(query, 200);
+  const [debouncedQuery] = useDebouncedValue(query, 200);
 
   const scrollViewportRef = useRef<HTMLDivElement>(null);
   let timeout: ReturnType<typeof setTimeout> | undefined;
@@ -39,21 +39,14 @@ export default function Posts() {
     scrollViewportRef.current?.scrollTo(0, 0);
   };
 
-  useEffect(() => {
-   if (loading === false){
-     setPosts(data)
-        console.log(posts)
-
-    // setRecords(data.slice(0, batchSize));
-   }
-  }, [data]);
-
-  const [debouncedQuery] = useDebouncedValue(query, 200);
 
   useEffect(() => {
-    setRecords(
-        initialRecords.filter(({ authorName, postText }) => {
-        
+   if (isLoading === false){
+    setPosts(data)
+   console.log(posts)
+
+     setRecords(
+        data.filter(({ authorName, postText }) => {
         if (
           debouncedQuery !== '' &&
           !`${authorName} ${postText} `
@@ -64,8 +57,9 @@ export default function Posts() {
         }
         return true;
       })
-    );
-  }, [debouncedQuery]);
+    ); 
+   }
+  }, [isLoading , debouncedQuery ]);
 
   useEffect(() => {
     return () => {
@@ -86,9 +80,9 @@ export default function Posts() {
         />
     </div>
 
-    {/* {isLoading ? <p className='m-4 p-4'>Loading data...</p> : (
-    <> */}
-    <Box sx={{ height: 300 }}>
+    {isLoading ? <p className='m-4 p-4'>Loading data...</p> : (
+    <>
+   <Box sx={{ height: 300 }}>
       <DataTable
         withBorder
         withColumnBorders
@@ -107,11 +101,11 @@ export default function Posts() {
         fetching={loading}
         onScrollToBottom={loadMoreRecords}
         scrollViewportRef={scrollViewportRef}
-       /*  onRowClick={(post, rowIndex, event) => {
+        onRowClick={(post, rowIndex, event) => {
           router.push(`posts/${post.id}`);
-        }} */
+        }}
       />
-
+ 
       <Group mt="sm" mx="xs" position="apart">
         <Text size="sm">
           Showing {records.length} records of {posts.length}
@@ -120,10 +114,10 @@ export default function Posts() {
         <Button variant="light" onClick={reset}>
           Reset records
         </Button>
-      </Group>
+      </Group> 
       </Box>
-      {/* </>)
-      } */}
+      </>)
+      }
     </>
   );
 }

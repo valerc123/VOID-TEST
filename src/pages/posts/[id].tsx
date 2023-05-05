@@ -1,9 +1,27 @@
-import React from 'react'
+import data from "../../components/postId.json"
+import Image from "next/image";
+import { useEffect, useState } from "react";
+//import { useRouter } from 'next/router';
+//import { useGetPostsIdQuery } from '../../redux/posts/api';
 
-function [id]() {
+function Posts() {
+   // const [postId, setPostId] = useState({});
+
+   /*  useEffect(() => {
+        setPostId(data)
+    }, [data]); */
+  /*   console.log(data.authorAvatar) */
+
   return (
-    <div>[id]</div>
+    <>
+    <div>
+        <h1>oeee </h1>
+       {/*  <Image src={data.authorAvatar} alt="avatar" width={80} height={80} />
+ */}
+
+    </div>
+    </>
   )
 }
 
-export default [id]
+export default Posts;
