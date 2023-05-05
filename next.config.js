@@ -2,6 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
+    domains: [ 'loremflickr.com', 'cloudflare-ipfs.com', 'media.valorant-api.com'],
     remotePatterns: [
       {
         protocol: 'https',
